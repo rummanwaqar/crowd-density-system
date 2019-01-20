@@ -14,7 +14,7 @@ class CrowdDensity extends Component {
 
         this.state = {
             showFilterModal: false,
-            value: 1,
+            value: 0,
             sliderValue: 0
         }
     }
