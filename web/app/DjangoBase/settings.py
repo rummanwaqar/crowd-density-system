@@ -25,7 +25,7 @@ SECRET_KEY = 'hl#tot*^#8-4#&f=&(9cc91v-$t_smaz^p144%hsadv6@()tm3'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.1.200', 'localhost', '127.0.0.1', '35.203.63.109']
+ALLOWED_HOSTS = ['192.168.1.200', 'localhost', '127.0.0.1', '35.203.63.109', 'cde-api.com']
 
 CORS_ORIGIN_ALLOW_ALL = True
 

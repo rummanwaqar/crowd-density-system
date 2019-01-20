@@ -5,11 +5,11 @@ from django.contrib.admin import AdminSite
 
 from crowd.models import WirelessClient, BaseStation, ClientConnection
 
+admin.site.site_title = "Crowd Density Service"
+admin.site.site_header = "Crowd Density Admin" 
 
-class CrowdAdminSite(AdminSite):
-    site_header = 'Crowd Density Admin'
 
-admin_site = CrowdAdminSite(name='myadmin')
-admin_site.register(WirelessClient)
-admin_site.register(BaseStation)
-admin_site.register(ClientConnection)
+admin.site.register(WirelessClient)
+admin.site.register(BaseStation)
+admin.site.register(ClientConnection)
+
