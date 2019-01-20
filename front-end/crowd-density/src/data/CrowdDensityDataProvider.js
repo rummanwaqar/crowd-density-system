@@ -53,7 +53,7 @@ const transformMapData = (rawData) => {
 }
 
 export const getHeatMap = () => {
-    const url = `http://192.168.1.200:8000/data/heatmap`;
+    const url = `http://www.cde-api.com:8000/data/heatmap`;
     return axios.get(url)
         .then((response) => {
             return transformMapData(response.data)}
@@ -74,7 +74,7 @@ export const getData = (params) => {
         end = `&end_time=${date}`
     }
 
-    const url = `http://192.168.1.200:8000/data/active-clients?interval=60${start}${end}`;
+    const url = `http://www.cde-api.com:8000/data/active-clients?interval=60${start}${end}`;
     console.log(url);
     return axios.get(url)
         .then((response) => {

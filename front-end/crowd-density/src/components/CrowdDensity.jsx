@@ -105,8 +105,8 @@ class CrowdDensity extends Component {
                 <div className="header">Crowd Density Estimator</div>
                 <Tabs value={value} onChange={this.handleChange}
                     centered>
-                    <Tab label="Chart" />
-                    <Tab label="Density" />
+                    <Tab label="Count Over Time" />
+                    <Tab label="Density Map" />
                 </Tabs>
                 {content}
             </div>
