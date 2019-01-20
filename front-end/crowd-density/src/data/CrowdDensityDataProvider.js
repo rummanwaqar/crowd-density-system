@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const prettyDate2 = (time) => {
-    const date = new Date(time);
+    const date = new Date(time * 1000);
     return date.toLocaleTimeString(navigator.language, {hour: '2-digit', minute:'2-digit'});
 }
 
@@ -11,63 +11,27 @@ const getLabels = (timeArray) => {
     })
 }
 
-const transformData = () => {
-    const rawData = [
-        {
-            count: 65,
-            time: "2015-10-22T19:20:08",
-            name: 'Dataset 1'
+const transformData = (rawData) => {
+    const dataMap = {
+        rumman_macbook: {
+            data: [],
+            label: "rumman_mackbook"
         },
-        {
-            count: 15,
-            time: "2015-10-22T19:30:08",
-            name: 'Dataset 1'
+        micah_asus: {
+            data: [],
+            label: "micah_asus"
         },
-        {
-            count: 80,
-            time: "2015-10-22T19:40:08",
-            name: 'Dataset 1'
-        },
-        {
-            count: 57,
-            time: "2015-10-22T19:50:08",
-            name: 'Dataset 1'
-        },
-        {
-            count: 40,
-            time: "2015-10-22T19:20:08",
-            name: 'Dataset 2'
-        },
-        {
-            count: 25,
-            time: "2015-10-22T19:30:08",
-            name: 'Dataset 2'
-        },
-        {
-            count: 70,
-            time: "2015-10-22T19:40:08",
-            name: 'Dataset 2'
-        },
-        {
-            count: 90,
-            time: "2015-10-22T19:50:08",
-            name: 'Dataset 2'
+        jacky_pc: {
+            data: [],
+            label: "jacky_pc"
         }
-    ]
-
-    const dataMap = {}
+    }
     const timeSet = new Set()
     rawData.forEach((data) => {
-        if (dataMap[data.name] && dataMap[data.name].data && dataMap[data.name].data.length) {
-            dataMap[data.name].data.push(data.count)
-        } else {
-            dataMap[data.name] = {
-                label: data.name,
-                data: [data.count]
-            }
-        }
-
-        timeSet.add(data.time);
+        dataMap["rumman_macbook"].data.push(data.count.rumman_macbook);
+        dataMap["micah_asus"].data.push(data.count.micah_asus);
+        dataMap["jacky_pc"].data.push(data.count.jacky_pc);
+        timeSet.add(data.start_time);
     })
 
     const timeArray = [...timeSet];
@@ -75,17 +39,52 @@ const transformData = () => {
     const labels = getLabels(timeArray);
 
     const datasets = Object.values(dataMap);
-
     return {
         datasets: datasets,
         labels: labels
     }
 }
 
+const transformMapData = (rawData) => {
+    const map = rawData;
+    return {
+        map: map
+    }
+}
+
+export const getHeatMap = () => {
+    const url = `http://192.168.1.200:8000/data/heatmap`;
+    return axios.get(url)
+        .then((response) => {
+            return transformMapData(response.data)}
+        ).catch((error) => {
+            console.log(error);
+        })
+}
+
 export const getData = (params) => {
-    return axios.get('/stuff')
-        .then(response => transformData())
-        .catch(error => transformData())
+    let start = "";
+    let end = "";
+    if (params && params.start) {
+        const date = new Date(params.start).getTime() / 1000;
+        start = `&start_time=${date}`
+    }
+    if (params && params.end) {
+        const date = new Date(params.end).getTime() / 1000;
+        end = `&end_time=${date}`
+    }
+
+    const url = `http://192.168.1.200:8000/data/active-clients?interval=60${start}${end}`;
+    console.log(url);
+    return axios.get(url)
+        .then((response) => {
+            console.log(response);
+            // console.log(response);
+            return transformData(response.data)}
+        ).catch((error) => {
+            console.log(error);
+            // transformData(error)
+        })
 
     // return axios.get('/stuff')
     //     .then(response => transformData(response.data))

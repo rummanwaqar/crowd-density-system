@@ -6,21 +6,34 @@ class CrowdDensityContainer extends Component {
     constructor (props) {
         super(props);
 
+        const d = new Date("Sun Jan 20 2019");
+        d.setHours(d.getHours() - 2);
+
         this.state = {
-            dataset: [],
-            labels: []
+            datasets: [],
+            labels: [],
+            params: {
+                start: d.toString()
+            },
+            map: []
         }
 
     }
 
     componentDidMount = () => {
-        this.getData()
-        this.interval = setInterval(() => this.getData(this.state.params), 10000);
+        this.getData(this.state.params);
+        this.getHeatMap();
+        // this.interval = setInterval(() => this.intervalGetData(this.state.params), 60000);
+    }
+
+    intervalGetData = (params) => {
+        if (params.end) {
+            this.getData(params);
+        }
     }
 
     getData = (params) => {
-        console.log(params);
-        dataProvider.getData(this.setData).then((response)=> {
+        dataProvider.getData(params).then((response)=> {
             this.setState({
                 datasets: response.datasets,
                 labels: response.labels,
@@ -31,7 +44,18 @@ class CrowdDensityContainer extends Component {
         });
     }
 
+    getHeatMap = () => {
+        dataProvider.getHeatMap().then((response) => {
+            this.setState({
+                map: response.map
+            })
+        }).catch((error) => {
+            console.log(error);
+        })
+    }
+
     render = () => {
+        // console.log(this.state);
         return (
             <CrowdDensity rawDatasets={this.state} getData={this.getData}/>
         )

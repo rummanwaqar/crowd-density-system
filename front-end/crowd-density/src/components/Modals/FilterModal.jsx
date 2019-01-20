@@ -1,21 +1,27 @@
 import React, {Component} from 'react'
+import Datetime from 'react-datetime';
 
 class Filter extends Component {
     constructor (props) {
         super(props);
+        const start = new Date();
+        start.setHours(start.getHours() - 2);
+        
         this.state = {
-            start: "",
+            start: start.toDateString(),
             end: "",
-            timeUnit: "seconds"
+            timeUnit: "seconds,"
+            // enabled: []
         }
     }
 
-    handleStartChange = (event) => {
-        this.setState({start: event.target.value});
+    handleStartChange = (moment) => {
+        // console.log(event);
+        this.setState({start: moment._d});
     }
 
-    handleEndChange = (event) => {
-        this.setState({end: event.target.value});
+    handleEndChange = (moment) => {
+        this.setState({end: moment._d});
     }
 
     handleTimeUnitChange = (event) => {
@@ -37,27 +43,21 @@ class Filter extends Component {
             <div className={showHideClassName}>
                 <div className="modal-main">
                     <div className="modal-input-container">
+                        
                         <div className="label-and-input">
-                            <span>Type</span>
-                            
-                        </div>
-                        <div className="label-and-input">
-                        <select name="timeunit-list" onChange={this.handleTimeUnitChange}>
-                        <option value="seconds">Seconds</option>
-                            <option value="minutes">Minutes</option>
-                            <option value="hours">Hours</option>
-                            <option value="days">Days</option>
-                        </select>
-                            <input type="number" pattern="[0-9]" onChange={this.handleStartChange}/>
+                            {/* <select name="timeunit-list" onChange={this.handleTimeUnitChange}>
+                                <option value="seconds">Seconds</option>
+                                <option value="minutes">Minutes</option>
+                                <option value="hours">Hours</option>
+                                <option value="days">Days</option>
+                            </select> */}
+                            <Datetime value={this.state.start} onChange={this.handleStartChange}/>
                             <span>to</span>
-                            <input type="number" pattern="[0-9]" onChange={this.handleEndChange}/>
-                        </div>
-                        <div className="label-and-input">
-                            <span>Detail</span>
+                            <Datetime onChange={this.handleEndChange}/>
                         </div>
                         <div className="modal-buttons">
-                            <button onClick={this.filter}>Filter</button>
-                            <button onClick={handleClose}>Cancel</button>
+                            <button onClick={this.filter}>Save</button>
+                            <button className="cancel" onClick={handleClose}>Cancel</button>
                         </div>
 
                     </div>
