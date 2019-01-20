@@ -1,6 +1,8 @@
 import React, {Component} from 'react'
 import {Line} from 'react-chartjs-2';
 
+// import * as zoom from 'chartjs-plugin-zoom'
+
 const colors = [
     'rgb(255, 99, 132)',
     'rgb(99, 132, 255)',
@@ -12,12 +14,7 @@ const colors = [
 
 class Chart extends Component {
     constructor (props) {
-        super(props);
-
-        
-        this.state = {
-            rawDatasets: []
-        }
+        super(props);        
     }
 
     convertRawDataset = (rawDataset, index) => {
@@ -65,14 +62,28 @@ class Chart extends Component {
     }
 
     render = () => {
-
         const {rawDatasets} = this.props;
         const data = this.createDatasets(rawDatasets);
-
         return (
-            <div className="Chart">
+            <div className="chart">
                 <Line
                     data={data}
+                    options={{
+                        scales: {
+                            yAxes: [{
+                                scaleLabel: {
+                                    display: true,
+                                    labelString: 'Count'
+                                }
+                            }],
+                            xAxes: [{
+                                scaleLabel: {
+                                    display: true,
+                                    labelString: 'Time'
+                                }
+                            }],
+                        }   
+                    }}
                 />
             </div>
         );

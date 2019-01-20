@@ -6,27 +6,34 @@ class CrowdDensityContainer extends Component {
     constructor (props) {
         super(props);
 
+        this.state = {
+            dataset: [],
+            labels: []
+        }
+
     }
 
-    getData = () => {
-        return {
-            datasets: [
-                {
-                    label: 'Dataset1',
-                    data: [65, 59, 80, 81, 56, 55, 40]
-                },
-                {
-                    label: 'Dataset2',
-                    data: [15, 39, 20, 71, 12, 40, 30]
-                }
-            ],
-            labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July']
-        }
+    componentDidMount = () => {
+        this.getData()
+        this.interval = setInterval(() => this.getData(this.state.params), 10000);
+    }
+
+    getData = (params) => {
+        console.log(params);
+        dataProvider.getData(this.setData).then((response)=> {
+            this.setState({
+                datasets: response.datasets,
+                labels: response.labels,
+                params: params
+            });
+        }).catch((error) => {
+            this.setState(error);
+        });
     }
 
     render = () => {
         return (
-            <CrowdDensity rawDatasets={this.getData()}/>
+            <CrowdDensity rawDatasets={this.state} getData={this.getData}/>
         )
     }
 }
