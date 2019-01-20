@@ -1,3 +1,5 @@
+import json
+
 from django.db import models
 
 # Create your models here.
@@ -11,10 +13,21 @@ class WirelessClient(models.Model):
 
 # TODO: add positional field:
 class BaseStation(models.Model):
+    token = models.CharField(max_length=50)
     human_name = models.CharField(max_length=50)
 
 
 class ClientConnection(models.Model):
-    station = models.ForeignKey(BaseStation, on_delete=CASCADE)
+    station = models.ForeignKey(BaseStation, on_delete=CASCADE, related_name="clients")
+    client = models.ForeignKey(WirelessClient, on_delete=CASCADE, related_name="connections")
+    time = models.PositiveIntegerField()
+    gain = models.FloatField(null=True)
+    channel = models.PositiveSmallIntegerField(null=True)
+
+
+class TriangulationEstimate(models.Model):
     client = models.ForeignKey(WirelessClient, on_delete=CASCADE)
-    time = models.DateTimeField()
+    x = models.IntegerField()
+    y = models.IntegerField()
+    confidence = models.PositiveSmallIntegerField()
+
