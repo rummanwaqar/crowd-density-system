@@ -32,10 +32,6 @@ class CrowdDensity extends Component {
         this.setState({showFilterModal: false});
     }
 
-    filter = () => {
-        console.log("Filter");
-    }
-
     handleChange = (event, newValue) => {
         this.setState({value: newValue});
     }
@@ -86,7 +82,7 @@ class CrowdDensity extends Component {
                 <Chart rawDatasets={rawDatasets}/>
                 <FilterModal show={this.state.showFilterModal}
                     handleClose={this.handleCloseFilter}
-                    filter={this.filter} getData={getData}/>
+                    getData={getData}/>
                 <div className="filter-button-container">
                     <button className="filter-button" onClick={this.onShowFilter}>Filter</button>
                 </div>

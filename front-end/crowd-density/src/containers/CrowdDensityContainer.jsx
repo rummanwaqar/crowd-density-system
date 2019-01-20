@@ -33,7 +33,9 @@ class CrowdDensityContainer extends Component {
     }
 
     getData = (params) => {
+        console.log("hey");
         dataProvider.getData(params).then((response)=> {
+            console.log(response);
             this.setState({
                 datasets: response.datasets,
                 labels: response.labels,

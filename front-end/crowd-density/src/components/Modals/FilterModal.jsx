@@ -29,7 +29,6 @@ class Filter extends Component {
     }
 
     filter = () => {
-        this.props.filter();
         this.props.getData(this.state);
         this.props.handleClose();
     }
