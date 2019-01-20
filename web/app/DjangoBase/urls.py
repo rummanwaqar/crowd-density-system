@@ -29,4 +29,6 @@ urlpatterns = [
     path('', include(api_router.urls)),
     url(r'^api-auth/', include('rest_framework.urls')),
     path('admin/', admin_site.urls),
+    url(r'ingest', views.ingest),
+    url(r'data/active-clients', views.get_active_clients)
 ]
