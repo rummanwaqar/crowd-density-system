@@ -1,3 +1,5 @@
+import json
+
 from django.db import models
 
 # Create your models here.
@@ -21,3 +23,11 @@ class ClientConnection(models.Model):
     time = models.PositiveIntegerField()
     gain = models.FloatField(null=True)
     channel = models.PositiveSmallIntegerField(null=True)
+
+
+class TriangulationEstimate(models.Model):
+    client = models.ForeignKey(WirelessClient, on_delete=CASCADE)
+    x = models.IntegerField()
+    y = models.IntegerField()
+    confidence = models.PositiveSmallIntegerField()
+

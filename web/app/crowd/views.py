@@ -1,6 +1,9 @@
 import json
+import os
 import time
 
+from django.core import cache
+from django.core.cache import caches
 from django.db.models import Min, Max, F
 from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render
@@ -8,6 +11,7 @@ from django.shortcuts import render
 # Create your views here.
 from rest_framework import viewsets
 
+from DjangoBase import settings
 from crowd.models import WirelessClient, BaseStation, ClientConnection
 from crowd.serializers import WirelessClientSerializer, BaseStationSerializer, ClientConnectionSerializer
 
@@ -106,28 +110,78 @@ def get_active_clients(request):
     count_over_time = list()
     current_processing_time = start_time
 
-    while current_processing_time < end_time:
-        current_time_dict = dict()
-        current_time_dict['start_time'] = current_processing_time
+    # Get latest cache:
+    cache = caches['default']
+    client_history = cache.get('client_history')
 
-        connections_in_interval = ClientConnection.objects.filter(time__gte=current_processing_time,
-                                                                  time__lte=current_processing_time+COUNT_INTERVAL)
+    if not client_history:
+        cache.set('client_history', dict(), timeout=0)
+        client_history = dict()
 
-        # optional gain filter:
-        if request.GET.get('gain'):
-            connections_in_interval = connections_in_interval.filter(gain__gte=request.GET.get('gain'))
+    while current_processing_time < end_time-COUNT_INTERVAL+1:
+        # Check cache:
+        if current_processing_time in client_history:
+            history_point = client_history[current_processing_time]
+            # Check zero:
+            zeroflag = True
+            for station in history_point['count']:
+                if history_point['count'][station] > 0:
+                    zeroflag = False
 
-        # Optional station filter:
-        if request.GET.get('station'):
-            connections_in_interval = connections_in_interval.filter(station__token=request.GET.get('station'))
+            if not zeroflag:
+                count_over_time.append(history_point)
 
-        clients_in_interval = valid_clients.filter(connections__in=connections_in_interval)
-        current_time_dict['count'] = int(clients_in_interval.count())
-        # current_time_dict['clients'] = list(clients_in_interval.values_list('id', flat=True))
-        count_over_time.append(current_time_dict)
+        else:
+            current_time_dict = dict()
+            current_time_dict['start_time'] = current_processing_time
 
-        # TODO Get new clients since last interval & clients that disappeared since last interval
+            connections_in_interval = ClientConnection.objects.filter(time__gte=current_processing_time,
+                                                                      time__lte=current_processing_time+COUNT_INTERVAL)
+            # optional gain filter:
+            if request.GET.get('gain'):
+                connections_in_interval = connections_in_interval.filter(gain__gte=request.GET.get('gain'))
+
+            current_time_dict['count'] = dict()
+
+            all_zero_flag = True
+
+            for station in BaseStation.objects.all():
+                connections_in_interval_station = connections_in_interval.filter(station=station)
+                clients_in_interval = valid_clients.filter(connections__in=connections_in_interval_station)
+                current_time_dict['count'][station.token] = int(clients_in_interval.count())
+
+                if clients_in_interval.count() > 0:
+                    all_zero_flag = False
+            # current_time_dict['clients'] = list(clients_in_interval.values_list('id', flat=True))
+
+            if not all_zero_flag:
+                count_over_time.append(current_time_dict)
+
+            # TODO Get new clients since last interval & clients that disappeared since last interval
+
+            client_history[current_processing_time] = current_time_dict
 
         current_processing_time = current_processing_time + COUNT_INTERVAL
 
+    cache.set('client_history', client_history)
+
     return JsonResponse(count_over_time, safe=False, json_dumps_params={'indent': 2})
+
+
+def get_heatmap(request):
+    heatmaps = list()
+    with open(os.path.join(settings.BASE_DIR, 'triangulation.json'), 'r') as tri_file:
+        tri_dict = json.load(tri_file)
+
+        for tri_line in tri_dict:
+            heatmap = dict()
+            heatmap['time'] = tri_line[0]
+
+            heatmap['points'] = list()
+            for tri_point in tri_line[1]:
+                heatmap['points'].append({'x': tri_point[0], 'y': tri_point[1]})
+
+            heatmaps.append(heatmap)
+
+
+    return JsonResponse(heatmaps, safe=False, json_dumps_params={'indent': 2})
