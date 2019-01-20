@@ -12,3 +12,6 @@ Using multiple base stations we can triangulate customers interactions as they m
 
 ![](images/triangulation.gif)
 
+We build realtime density maps of the environment to allow better analysis of traffic flow.
+
+![](images/density_map.gif)
