@@ -15,15 +15,15 @@ const transformData = (rawData) => {
     const dataMap = {
         rumman_macbook: {
             data: [],
-            label: "rumman_mackbook"
+            label: "Beacon R"
         },
         micah_asus: {
             data: [],
-            label: "micah_asus"
+            label: "Beacon M"
         },
         jacky_pc: {
             data: [],
-            label: "jacky_pc"
+            label: "Beacon J"
         }
     }
     const timeSet = new Set()

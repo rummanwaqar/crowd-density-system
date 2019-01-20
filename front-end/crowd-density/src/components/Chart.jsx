@@ -73,7 +73,7 @@ class Chart extends Component {
                             yAxes: [{
                                 scaleLabel: {
                                     display: true,
-                                    labelString: 'Count'
+                                    labelString: 'Number of People'
                                 }
                             }],
                             xAxes: [{
