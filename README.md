@@ -1,4 +1,4 @@
-# Crowd Density Estimation System
+# Crowd Density Estimation API
 
 🥇 Winner [HackEd 2019](https://hacked2019.devpost.com/)
 
