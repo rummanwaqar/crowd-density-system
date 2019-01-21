@@ -14,7 +14,7 @@ class CrowdDensity extends Component {
 
         this.state = {
             showFilterModal: false,
-            value: 1,
+            value: 0,
             sliderValue: 0
         }
     }
@@ -102,11 +102,11 @@ class CrowdDensity extends Component {
 
         return (
             <div className="crowd-density">
-                <div className="header">Crowd Density</div>
+                <div className="header">Crowd Density Estimator</div>
                 <Tabs value={value} onChange={this.handleChange}
                     centered>
-                    <Tab label="Chart" />
-                    <Tab label="Density" />
+                    <Tab label="Count Over Time" />
+                    <Tab label="Density Map" />
                 </Tabs>
                 {content}
             </div>

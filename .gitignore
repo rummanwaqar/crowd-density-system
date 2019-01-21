@@ -4,3 +4,4 @@ __pycache__/
 *.sqlite3
 web/app/env/
 web/app/venv/
+node_modules/

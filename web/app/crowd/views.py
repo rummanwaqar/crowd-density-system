@@ -89,10 +89,10 @@ def get_active_clients(request):
     # TODO: figure out if rumman is sending current UTC epoch or not
     end_time = int(time.time())
 
-    if request.GET.get('start_time'):
+    if request.GET.get('start_time') and int(request.GET.get('start_time')) > start_time:
         start_time = int(request.GET.get('start_time'))
 
-    if request.GET.get('end_time'):
+    if request.GET.get('end_time') and int(request.GET.get('end_time')) <= time.time():
         end_time = int(request.GET.get('end_time'))
 
     valid_clients = WirelessClient.objects.all()\
@@ -103,9 +103,6 @@ def get_active_clients(request):
                                   .filter(duration__gt=0)
 
     COUNT_INTERVAL = 60
-
-    if request.GET.get('interval'):
-        COUNT_INTERVAL = int(request.GET.get('interval'))
 
     count_over_time = list()
     current_processing_time = start_time
@@ -128,8 +125,8 @@ def get_active_clients(request):
                 if history_point['count'][station] > 0:
                     zeroflag = False
 
-            if not zeroflag:
-                count_over_time.append(history_point)
+#            if not zeroflag:
+            count_over_time.append(history_point)
 
         else:
             current_time_dict = dict()
