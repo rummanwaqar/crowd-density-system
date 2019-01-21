@@ -4,7 +4,7 @@ import requests
 import json
 from tshark_interface import TSharkInterface
 
-def send_data(data, station='rumman_macbook', url="http://192.168.1.200:8000/ingest"):
+def send_data(data, station='rumman_macbook', url="http://www.cde-api.com:8000/ingest"):
     headers = {'content-type': 'application/json; charset=utf-8'}
     jsondata = json.dumps({'station': station, 'data': data}).encode('utf-8')
     response = requests.post(url, data=jsondata, headers=headers)
