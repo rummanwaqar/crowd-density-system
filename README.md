@@ -2,8 +2,8 @@
 
 🥇 Winner [HackEd 2019](https://hacked2019.devpost.com/)
 
-We provide analytics for the physical world. We build an API to provide data on how people physically move and interact in your spaces.
-Almost everyone has a mobile phone with them these days. What if we could use the publically available information from these devices to estimate the number of people in a certain area?
+We provide analytics for the physical world. We built an API to provide data on how people physically move and interact in your spaces.
+Almost everyone has a mobile phone in their pockets these days. What if we could use the publically available information from these devices to estimate the number of people in a certain area?
 
 Our plug and play WiFi beacons constantly monitor all probing packets sent by devices around them. We can use this information to track the flow of people.
 
